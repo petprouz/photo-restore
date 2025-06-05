@@ -6,6 +6,7 @@ from .views import health_check
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+from django.views.generic import RedirectView
 
 # Define API URL patterns
 api_urlpatterns = [
@@ -28,12 +29,15 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-    path('swagger<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
-    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    # Redirect root to Swagger UI
+    path('', RedirectView.as_view(url='/swagger/', permanent=False), name='index'),
     path('admin/', admin.site.urls),
     path('api/health/', health_check, name='health_check'),
     path('api/', include(api_urlpatterns)),
+    # Swagger URLs
+    path('swagger<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ]
 
 # Serve media files in development
