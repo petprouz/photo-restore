@@ -1,1 +1,1 @@
-cd backend && pip install djangorestframework-simplejwt==5.3.1 && gunicorn restore.wsgi:application 
+web: cd backend && poetry install && poetry run gunicorn restore.wsgi:application 
