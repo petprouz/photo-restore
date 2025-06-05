@@ -1,0 +1,40 @@
+services:
+  - type: web
+    name: photo-restore-backend
+    env: python
+    buildCommand: cd backend && poetry install --no-dev
+    startCommand: cd backend && poetry run gunicorn restore.wsgi:application --bind 0.0.0.0:$PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.11
+      - key: DJANGO_SETTINGS_MODULE
+        value: restore.settings
+      - key: DJANGO_DEBUG
+        value: "False"
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: POSTGRES_DATABASE
+        fromDatabase:
+          name: photo-restore-db
+          property: database
+      - key: POSTGRES_USER
+        fromDatabase:
+          name: photo-restore-db
+          property: user
+      - key: POSTGRES_PASSWORD
+        fromDatabase:
+          name: photo-restore-db
+          property: password
+      - key: POSTGRES_HOST
+        fromDatabase:
+          name: photo-restore-db
+          property: host
+      - key: POSTGRES_PORT
+        fromDatabase:
+          name: photo-restore-db
+          property: port
+
+databases:
+  - name: photo-restore-db
+    databaseName: photo_restore
+    user: photo_restore_user 
