@@ -1,1 +1,1 @@
-web: cd backend && poetry install --no-dev && poetry run python manage.py migrate && poetry run gunicorn restore.wsgi:application 
+web: cd backend && poetry install --no-dev && poetry run pip install drf-yasg==1.21.7 && poetry run python manage.py migrate && poetry run gunicorn restore.wsgi:application 
