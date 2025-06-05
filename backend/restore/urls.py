@@ -7,6 +7,12 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
+# Define API URL patterns
+api_urlpatterns = [
+    path('', include('photo_restore.urls')),
+    path('', include('users.urls')),
+]
+
 schema_view = get_schema_view(
     openapi.Info(
         title="Photo Restore API",
@@ -18,10 +24,7 @@ schema_view = get_schema_view(
     ),
     public=True,
     permission_classes=(permissions.AllowAny,),
-    patterns=[
-        path('api/', include('photo_restore.urls')),
-        path('api/', include('users.urls')),
-    ],
+    patterns=api_urlpatterns,
 )
 
 urlpatterns = [
@@ -30,8 +33,7 @@ urlpatterns = [
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     path('admin/', admin.site.urls),
     path('api/health/', health_check, name='health_check'),
-    path('api/', include('photo_restore.urls')),
-    path('api/', include('users.urls')),
+    path('api/', include(api_urlpatterns)),
 ]
 
 # Serve media files in development
